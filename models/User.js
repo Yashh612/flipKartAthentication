@@ -21,7 +21,6 @@ const userSchema = new mongoose.Schema({
   },
   phoneNo: {
     type: Number,
-    required: true
   },
   cart: {
     type: mongoose.Schema.Types.ObjectId,

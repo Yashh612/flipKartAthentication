@@ -46,7 +46,7 @@ exports.filterPrinters = async (req, res) => {
   try {
     const { minPrice, maxPrice, rating, brand, sortField, sortOrder } = req.body;
     let filter = {};
-    console.log(req.body, "agfagdgj");
+    console.log(req.body, "Filter Data");
 
     // Building the filter object for price
     if (minPrice || maxPrice) {
