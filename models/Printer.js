@@ -13,7 +13,7 @@ const PrinterSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  HeadImage: {
+  headImage: {
     type: String,
     required: true
   },

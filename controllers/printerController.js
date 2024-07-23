@@ -7,7 +7,7 @@ exports.createPrinter = async (req, res) => {
       productTitle: req.body.productTitle,
       rating: req.body.rating,
       price: req.body.price,
-      HeadImage: req.body.HeadImage,
+      headImage: req.body.headImage,
       DescriptiveImages: req.body.DescriptiveImages,
       Brand: req.body.Brand,
       productDetails: req.body.productDetails
@@ -84,7 +84,7 @@ exports.filterPrinters = async (req, res) => {
 
 
     // Query the database with filter and sort options
-    const printers = await Printer.find(filter).select('_id HeadImage productTitle rating price discountPercentage discountedPrice').sort(sort);
+    const printers = await Printer.find(filter).select('_id headImage productTitle rating price discountPercentage discountedPrice').sort(sort);
     res.json({ data: printers });
 
   } catch (error) {
