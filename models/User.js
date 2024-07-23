@@ -25,6 +25,12 @@ const userSchema = new mongoose.Schema({
   cart: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Cart'
+  },
+  otp: {
+    type: Number,
+  },
+  otpTimestamp: {
+    type: Date,
   }
 });
 
@@ -41,6 +47,13 @@ userSchema.pre('save', async function(next) {
 // Compare password
 userSchema.methods.matchPassword = async function(enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
+};
+
+// Check if OTP is expired
+userSchema.methods.isOtpExpired = function() {
+  const now = new Date();
+  const otpAge = (now - this.otpTimestamp) / 1000; // in seconds
+  return otpAge > 180; // 180 seconds = 3 minutes
 };
 
 module.exports = mongoose.model('User', userSchema);

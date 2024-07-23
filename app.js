@@ -7,6 +7,7 @@ const errorHandler = require('./middlewares/errorHandlers');
 const printerRoutes = require('./routes/printerRoutes');
 const cartRoutes = require('./routes/cartRoutes');
 const authRoutes = require('./routes/authRoutes');
+const passwordRoutes = require('./routes/passwordRoutes');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -28,7 +29,7 @@ app.use(cors());
 app.use('/api/printers', printerRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/auth', authRoutes);
-
+app.use('/api/password', passwordRoutes);
 
 // Error handling middleware
 app.use(errorHandler);

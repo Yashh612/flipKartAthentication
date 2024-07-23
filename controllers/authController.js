@@ -1,3 +1,4 @@
+// controllers/authController.js
 const jwt = require('jsonwebtoken');
 const asyncHandler = require('express-async-handler');
 const User = require('../models/User');
@@ -51,9 +52,22 @@ exports.login = [
   asyncHandler(async (req, res) => {
     const { email, password } = req.body;
 
+    console.log('Login attempt:', { email, password });
+
     const user = await User.findOne({ email });
 
-    if (user && (await user.matchPassword(password))) {
+    if (!user) {
+      console.log('User not found');
+      res.status(401);
+      throw new Error('Invalid email or password');
+    }
+
+    console.log('User found:', user);
+
+    const isMatch = await user.matchPassword(password);
+    console.log('Password match:', isMatch);
+
+    if (isMatch) {
       res.json({
         firstName: user.firstName,
         lastName: user.lastName,
@@ -62,6 +76,7 @@ exports.login = [
         token: generateToken(user._id),
       });
     } else {
+      console.log('Invalid password');
       res.status(401);
       throw new Error('Invalid email or password');
     }
