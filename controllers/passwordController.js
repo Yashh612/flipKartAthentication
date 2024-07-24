@@ -85,7 +85,7 @@ exports.verifyOtp = asyncHandler(async (req, res) => {
   }
 });
 
-// Update password
+// update Password field
 exports.updatePassword = asyncHandler(async (req, res) => {
   const { email, newPassword } = req.body;
 
@@ -93,23 +93,26 @@ exports.updatePassword = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: 'Email and new password are required' });
   }
 
-  const user = await User.findOne({ email });
-  if (!user) {
-    return res.status(400).json({ message: 'Invalid email' });
+  try {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+    console.log('New hashed password:', hashedPassword);
+
+    const user = await User.findOneAndUpdate(
+      { email },
+      { password: hashedPassword },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid email' });
+    }
+
+    console.log('Updated user:', user);
+
+    res.status(200).json({ message: 'Password updated successfully' });
+  } catch (error) {
+    console.error('Error updating password:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
-
-  console.log('User found:', user);
-
-  // Hash the new password
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(newPassword, salt);
-  console.log('New hashed password:', hashedPassword);
-
-  user.password = hashedPassword;
-  await user.save();
-
-  const updatedUser = await User.findOne({ email });
-  console.log('Updated user:', updatedUser);
-
-  res.status(200).json({ message: 'Password updated successfully' });
 });
